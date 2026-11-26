@@ -1,0 +1,223 @@
+{
+  "name": "Preentrega 1 AI Avanzado",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8c3af4dd-0ab4-4327-9a8c-b93ce244f436",
+      "name": "When chat message received",
+      "webhookId": "93419e66-228a-4a43-9e33-2dea91799f6a"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "ROL\nSos el asistente de atención al cliente de Scatto, marca argentina de soportes magnéticos MagSafe para rejilla de auto. Atendés consultas de clientes y potenciales clientes por chat.\n\nÁMBITO\nRespondés solo sobre productos Scatto (modelo Clasico para rejillas con aletas y modelo Y02 para salidas redondas o tipo turbina), compatibilidad con celulares y fundas, instalación, envíos, medios de pago, devoluciones y garantía. Cualquier otro tema queda fuera de tu alcance y lo decís con amabilidad.\n\nOBJETIVO\nResolver la consulta en la menor cantidad de mensajes posible, con información verificada, y acompañar al cliente hasta la compra cuando corresponda.\n\nHERRAMIENTAS\nTenés la herramienta consultar_faq, que lee la planilla oficial de preguntas frecuentes. Usala siempre que la respuesta dependa de un dato concreto del negocio (envíos, pagos, políticas, compatibilidad, instalación). La planilla no tiene precios: si el cliente pregunta cuánto sale, indicale que el precio actualizado está en tienda.scatto.com.ar. No uses la herramienta para saludos, agradecimientos, despedidas ni para datos que ya obtuviste en esta conversación.\n\nREGLAS\n1. Nunca inventes precios, stock, plazos ni políticas. Si el dato no está en la planilla, decilo y ofrecé derivar.\n2. No prometas descuentos, reembolsos ni excepciones.\n3. No pidas datos de tarjeta, contraseñas ni documentos. No compartas alias ni CBU por chat.\n4. No compartas links ni datos de contacto que no figuren en la planilla, salvo tienda.scatto.com.ar.\n5. Escribí en español rioplatense, con tono cercano y profesional, en mensajes de hasta 4 oraciones.\n6. No uses lenguaje inclusivo (nada de \"todes\", \"x\" ni \"@\"). Usá el masculino genérico o formulaciones neutras.\n7. Si la consulta es ambigua, por ejemplo no sabés qué tipo de rejilla tiene el auto, preguntá antes de suponer.\n8. Respondé solo con datos que estén en el resultado de la herramienta. Si el cliente pregunta algo que la planilla no informa (por ejemplo, un plazo de entrega exacto), decí que ese dato no lo tenés disponible, sin mencionar la planilla ni la herramienta y ofrecé lo que sí figura. Incluí siempre las condiciones que trae la respuesta, como montos mínimos o costos a cargo del comprador.\n\nESCALAMIENTO\nDerivá a una persona cuando el cliente reclame por un pedido dañado o que no llegó, pida hablar con un humano, haga una consulta mayorista, o cuando después de dos intentos no hayas podido resolver. En esos casos respondé: \"Te paso con una persona del equipo que te va a ayudar con esto\" y no sigas intentando resolver.",
+          "maxIterations": 6,
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "a0efdf79-ef50-4d99-bdaf-b775c9ac8107",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        208
+      ],
+      "id": "9edb0bb1-d44a-4044-99f2-0f59e59cc874",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "a8NRL81uqiAPhQGE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Consulta la planilla oficial de preguntas frecuentes de Scatto. Columnas: tema (identificador corto, por ejemplo compatibilidad_rejilla, envio_interior, formas_de_pago), respuesta (texto oficial para el cliente) y estado (solo son válidas las filas con estado ok). Activar esta herramienta antes de responder cuando el cliente pregunte por cualquiera de estos temas: qué modelo le sirve según el tipo de rejilla, compatibilidad con su celular o funda, si carga el celular, qué incluye la caja, instalación, estabilidad, envíos a CABA, GBA o interior, entrega en el día, retiro, formas de pago y cuotas, pago por transferencia, devoluciones, garantía y dónde comprar. Usarla aunque el modelo crea conocer la respuesta, porque solo los datos de la planilla son válidos. No usarla para saludos, agradecimientos, despedidas, temas ajenos a Scatto ni para información ya obtenida en esta misma conversación. La planilla no contiene precios de los productos. La herramienta devuelve las filas: identificar la fila cuyo tema corresponda a la consulta y responder únicamente con lo que indica la columna respuesta, adaptando el tono sin agregar datos.\nValores válidos para tema: compatibilidad_rejilla, compatibilidad_celular, funda, carga, que_incluye, instalacion, estabilidad, envio_caba_gba, envio_interior, retiro, formas_de_pago, devoluciones, garantia, donde_comprar, entrega_en_el_dia, transferencia_alias. Si la consulta abarca varios temas, llamar a la herramienta una vez por cada tema.",
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "TU_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "FAQ Scatto",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1688885793,
+          "mode": "list",
+          "cachedResultName": "FAQ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_SHEET_ID/edit#gid=1688885793"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "estado",
+              "lookupValue": "ok"
+            },
+            {
+              "lookupColumn": "tema",
+              "lookupValue": "={{ $fromAI('tema', 'Identificador del tema de la planilla, uno de los valores válidos listados en la descripción', 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        496,
+        208
+      ],
+      "id": "ecc703dd-d5b0-4440-ab47-582b4fbd057b",
+      "name": "consultar_faq",
+      "credentials": {
+        "googleApi": {
+          "id": "BuV4Is556xyZRkWc",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "TU_EMAIL@ejemplo.com",
+        "subject": "=Log agente Scatto {{ $now.format('dd/MM HH:mm') }}",
+        "message": "=<p><b>Consulta:</b> {{ $('When chat message received').item.json.chatInput }}</p>\n<p><b>Respuesta:</b> {{ $json.output }}</p>\n<p><b>Pasos del agente:</b></p>\n<pre>{{ JSON.stringify($json.intermediateSteps.map(s => ({ herramienta: s.action.tool, entrada: s.action.toolInput, resultado: s.observation })), null, 2) }}</pre>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        0
+      ],
+      "id": "4d827088-c74d-4c25-b441-f22493480a01",
+      "name": "Log de observabilidad",
+      "webhookId": "08d74311-fd22-4824-8177-6e3171025005",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GuIxL97qtS02s1e3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ce8ccf7-52f5-4041-b44a-790558742428",
+              "name": "output",
+              "value": "={{ $('AI Agent').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        816,
+        0
+      ],
+      "id": "d99a1050-7733-4fc0-8312-cab9ee7d18f7",
+      "name": "Respuesta al chat"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar_faq": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Log de observabilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log de observabilidad": {
+      "main": [
+        [
+          {
+            "node": "Respuesta al chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e31af5a4-9456-4b40-9a37-44de0e552ac4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "205aeb0b1f8d771a571fb699fa6e635d56e4bb38df60f23bba87870cb24dae08"
+  },
+  "nodeGroups": [],
+  "id": "KXoDrJBzJBLNLBCY",
+  "tags": []
+}
