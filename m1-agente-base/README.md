@@ -113,7 +113,7 @@ Después de cada ejecución, el nodo Gmail manda un mail en HTML con la consulta
 
 **Prueba 1: saludo, sin herramienta**
 
-![Prueba saludo](capturas/04-prueba-saludo.png)
+![Log del saludo: pasos del agente vacíos](capturas/04-prueba-saludo-mail.png)
 
 **Prueba 2: consulta con herramienta**
 
@@ -121,13 +121,17 @@ Después de cada ejecución, el nodo Gmail manda un mail en HTML con la consulta
 
 ![Salida del agente con las llamadas a la herramienta](capturas/06-prueba-consulta-salida-agente.png)
 
-![Mail de observabilidad](capturas/07-mail-log.png)
+![Mail de observabilidad](capturas/07a-mail-log.png)
+
+![Mail de observabilidad, pasos del agente](capturas/07b-mail-log.png)
 
 ## Riesgos detectados y cómo se mitigaron
 
 **Alucinación de plazos.** En una de las pruebas con Gemini Flash Lite, el agente respondió que el envío al interior tardaba "de 3 a 6 días hábiles", un dato que no está en la planilla, y además omitió el monto mínimo para el envío gratis. El error se detectó gracias al log de observabilidad, comparando el resultado de la herramienta con la respuesta final. Se corrigió con la regla 8 del System Message (responder solo con datos de la herramienta y avisar cuando un dato no está disponible) y pasando el modelo a Gemini Flash. En la prueba siguiente el agente contestó "el plazo exacto de entrega a Córdoba no lo tengo disponible" e incluyó todas las condiciones.
 
-![Alucinación detectada en el log](capturas/08-alucinacion-detectada.png)
+![Alucinación detectada en el log](capturas/08a-alucinacion-detectada.png)
+
+![Resultado de la herramienta sin plazo de entrega](capturas/08b-alucinacion-detectada.png)
 
 **Consumo de tokens.** En la primera versión la herramienta devolvía las 16 filas de la planilla en cada llamada. Con el filtro por `tema` que completa el modelo, cada llamada devuelve una sola fila.
 
