@@ -89,6 +89,10 @@ Consulta la planilla oficial de preguntas frecuentes de Scatto. Columnas: tema (
 
 ![Configuración de la tool](capturas/03-tool-consultar-faq.png)
 
+![Filtro por estado](capturas/03b-tool-filtro-estado.png)
+
+![Filtro por tema definido por el modelo](capturas/03c-tool-filtro-tema.png)
+
 ## Observabilidad
 
 Después de cada ejecución, el nodo Gmail manda un mail en HTML con la consulta, la respuesta y la auditoría de pasos del agente (herramienta usada, entrada que eligió el modelo y resultado que devolvió):
@@ -113,9 +117,9 @@ Después de cada ejecución, el nodo Gmail manda un mail en HTML con la consulta
 
 **Prueba 2: consulta con herramienta**
 
-![Lienzo en verde](capturas/05-prueba-consulta-lienzo.png)
+![Lienzo en verde](capturas/01-lienzo-completo.png)
 
-![Logs del agente](capturas/06-prueba-consulta-logs.png)
+![Salida del agente con las llamadas a la herramienta](capturas/06-prueba-consulta-salida-agente.png)
 
 ![Mail de observabilidad](capturas/07-mail-log.png)
 
